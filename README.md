@@ -72,6 +72,21 @@ titanic-analysis/
    Esto genera `data/processed/titanic_clean.csv` y las gráficas en
    `reports/figures/`.
 
+## Hallazgos principales del EDA
+
+- La tasa de supervivencia general es de **38.4%**.
+- El sexo es el factor más determinante: **74.2%** de las mujeres
+  sobrevivió, frente a solo **18.9%** de los hombres.
+- La clase del pasajero también es clave: 1ª clase **63.0%**, 2ª clase
+  **47.3%**, 3ª clase **24.2%** de supervivencia.
+- Los pasajeros con familias pequeñas (2-4 integrantes) tuvieron mejores
+  tasas de supervivencia que quienes viajaban solos o en familias muy
+  grandes (5+).
+
+Las gráficas que respaldan estos hallazgos están en `reports/figures/`:
+`survival_by_sex.png`, `survival_by_class.png`, `age_distribution.png`
+y `survival_by_family_size.png`.
+
 ## Autor
 
 Elías F. Maltrana — proyecto individual, materia de Big Data.
