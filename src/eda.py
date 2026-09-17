@@ -77,6 +77,16 @@ def plot_survival_by_age_group(df: pd.DataFrame) -> None:
     plt.close(fig)
 
 
+def plot_fare_by_survival(df: pd.DataFrame) -> None:
+    fig, ax = plt.subplots(figsize=(6, 5))
+    sns.boxplot(data=df, x="survived", y="fare", ax=ax)
+    ax.set_title("Fare distribution by survival")
+    ax.set_xlabel("Survived (0 = No, 1 = Yes)")
+    fig.tight_layout()
+    fig.savefig(FIGURES_DIR / "fare_by_survival.png", dpi=150)
+    plt.close(fig)
+
+
 def print_summary(df: pd.DataFrame) -> None:
     print("Rows:", len(df))
     print("\n=== Analisis 1: Porcentaje general de supervivencia ===")
@@ -97,6 +107,11 @@ def print_summary(df: pd.DataFrame) -> None:
     alone_rate = df.groupby("is_alone")["survived"].mean() * 100
     print(f"Solo: {alone_rate[1]:.1f}%  |  Acompanado: {alone_rate[0]:.1f}%")
 
+    print("\n=== Analisis 6: Tarifa pagada vs. supervivencia ===")
+    fare_by_survival = df.groupby("survived")["fare"].mean().round(2)
+    print(f"Tarifa promedio - No sobrevivio: {fare_by_survival[0]}  |  Sobrevivio: {fare_by_survival[1]}")
+    print("Correlacion (fare, survived):", round(df["fare"].corr(df["survived"]), 3))
+
 
 def main() -> None:
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -108,8 +123,9 @@ def main() -> None:
     plot_age_distribution(df)
     plot_survival_by_family_size(df)
     plot_survival_by_age_group(df)
+    plot_fare_by_survival(df)
 
-    print(f"\nSaved 5 figures to {FIGURES_DIR}")
+    print(f"\nSaved 6 figures to {FIGURES_DIR}")
 
 
 if __name__ == "__main__":

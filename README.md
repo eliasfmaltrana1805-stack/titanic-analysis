@@ -101,6 +101,24 @@ evidencia de entrega, donde esto causó un fallo al reproducir el proyecto
 de mi compañero). Si tu `pip install` falla al compilar `pandas`, usa
 Python 3.11–3.12.
 
+## Exploración inicial
+
+Al ejecutar `python src/preprocess.py` se imprime automáticamente:
+
+- **Número de pasajeros:** 891
+- **Número de columnas:** 12
+- **Variables disponibles:** `PassengerId`, `Survived`, `Pclass`, `Name`,
+  `Sex`, `Age`, `SibSp`, `Parch`, `Ticket`, `Fare`, `Cabin`, `Embarked`.
+- **Tipos de datos:** numéricos (`PassengerId`, `Survived`, `Pclass`,
+  `Age`, `SibSp`, `Parch`, `Fare`) y de texto (`Name`, `Sex`, `Ticket`,
+  `Cabin`, `Embarked`).
+- **Registros duplicados:** 0.
+- **Valores faltantes:** ver tabla siguiente.
+- **Estadísticas descriptivas** de las variables numéricas (conteo,
+  media, desviación estándar, mínimo, cuartiles y máximo) — por ejemplo,
+  `Fare` va de 0 a 512.33 con una media de 32.20, y `Age` tiene una media
+  de ~29.7 años entre quienes la reportaron.
+
 ## Tratamiento de valores faltantes
 
 El dataset original tiene valores faltantes en tres columnas:
@@ -147,12 +165,18 @@ Viajar acompañado (family_size 2-4) se asoció con mayor supervivencia
 (50.6%) que viajar solo (30.4%). Familias muy grandes (5+) volvieron a
 tener tasas bajas, probablemente por dificultad para evacuar juntos.
 
-Estas 5 respuestas (más de las 4 mínimas requeridas) se calculan e
+**6. ¿Existe alguna relación entre la tarifa pagada y la supervivencia?**
+Sí: la tarifa promedio de quienes sobrevivieron fue de $48.40, frente a
+$22.12 de quienes no sobrevivieron (correlación de 0.257 entre `fare` y
+`survived`). Pagar una tarifa más alta —asociada a mejor clase— se
+relaciona con mayor probabilidad de supervivencia.
+
+Estas 6 respuestas (más de las 4 mínimas requeridas) se calculan e
 imprimen automáticamente al ejecutar `python src/eda.py`.
 
 ## Visualizaciones
 
-Generadas en `reports/figures/` (5 gráficas, más de las 3 mínimas
+Generadas en `reports/figures/` (6 gráficas, más de las 3 mínimas
 requeridas):
 
 - `survival_by_sex.png` — tasa de supervivencia por sexo.
@@ -160,6 +184,7 @@ requeridas):
 - `age_distribution.png` — distribución de edad por supervivencia.
 - `survival_by_family_size.png` — tasa de supervivencia por tamaño de familia.
 - `survival_by_age_group.png` — tasa de supervivencia por grupo de edad.
+- `fare_by_survival.png` — distribución de tarifa pagada según supervivencia.
 
 ## Resultados y conclusiones
 
@@ -175,9 +200,12 @@ requeridas):
 - **Viajar acompañado** (en familias pequeñas de 2 a 4 personas) se
   asoció con mejor supervivencia que viajar solo o en familias muy
   grandes.
+- La **tarifa pagada** también se relaciona positivamente con la
+  supervivencia (correlación 0.257), lo cual es consistente con el
+  hallazgo de clase: tarifas más altas suelen corresponder a mejor clase.
 - En conjunto, los datos muestran que la supervivencia en el Titanic no
   fue aleatoria: estuvo fuertemente influida por el sexo, la clase
-  social y la composición familiar del pasajero.
+  social, la tarifa pagada y la composición familiar del pasajero.
 
 ## Autor
 

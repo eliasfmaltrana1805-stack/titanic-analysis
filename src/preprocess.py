@@ -84,10 +84,16 @@ def main() -> None:
     df = load_raw()
 
     print(f"Raw dataset: {len(df)} rows, {len(df.columns)} columns")
-    print("Duplicated rows:", df.duplicated().sum())
+    print("\nVariables disponibles:")
+    print(list(df.columns))
+    print("\nTipos de datos:")
+    print(df.dtypes)
+    print("\nDuplicated rows:", df.duplicated().sum())
     print("\nMissing values in raw data:")
     missing = df.isna().sum()
     print(missing[missing > 0])
+    print("\nEstadisticas descriptivas (variables numericas):")
+    print(df.describe())
 
     clean_df = clean(df)
 
