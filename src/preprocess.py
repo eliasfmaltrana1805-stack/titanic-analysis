@@ -1,13 +1,22 @@
 """Cleans and enriches the raw Titanic dataset.
 
 Reads data/raw/train.csv and writes data/processed/titanic_clean.csv with:
-  - Age imputed with the median (per Pclass/Sex group)
-  - Embarked imputed with the mode
-  - Cabin dropped (too many missing values) but kept as `has_cabin` flag
+  - Age imputed with the median of its (Pclass, Sex) group (177 missing
+    values out of 891 -- ~19.9%). A per-group median was preferred over a
+    single global median because age varies noticeably by class and sex
+    in this dataset, so it keeps the imputed values closer to reality
+    than a single flat number would.
+  - Embarked imputed with the overall mode (only 2 missing values).
+  - Cabin dropped (687 missing out of 891, ~77% -- too sparse to impute
+    reliably) but kept as a binary `has_cabin` flag, since simply having
+    a recorded cabin correlates with passenger class/fare.
+  - Fare imputed with the median (0 missing in train.csv, but handled for
+    robustness in case this script is reused on test.csv).
   - normalized column names (snake_case)
   - a `family_size` column (SibSp + Parch + 1)
   - an `is_alone` flag (family_size == 1)
   - a `title` column extracted from the passenger's name
+  - an `age_group` column (Child / Teen / Adult / Senior)
 """
 
 import re
@@ -57,6 +66,12 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
     df["is_alone"] = (df["family_size"] == 1).astype(int)
     df["title"] = df["name"].apply(extract_title)
 
+    df["age_group"] = pd.cut(
+        df["age"],
+        bins=[0, 12, 18, 60, 100],
+        labels=["Child", "Teen", "Adult", "Senior"],
+    )
+
     df["sex"] = df["sex"].astype("category")
     df["embarked"] = df["embarked"].astype("category")
     df["pclass"] = df["pclass"].astype("category")
@@ -67,14 +82,22 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
 
 def main() -> None:
     df = load_raw()
+
+    print(f"Raw dataset: {len(df)} rows, {len(df.columns)} columns")
+    print("Duplicated rows:", df.duplicated().sum())
+    print("\nMissing values in raw data:")
+    missing = df.isna().sum()
+    print(missing[missing > 0])
+
     clean_df = clean(df)
 
     PROCESSED_PATH.parent.mkdir(parents=True, exist_ok=True)
     clean_df.to_csv(PROCESSED_PATH, index=False)
 
-    print(f"Processed {len(clean_df)} rows -> {PROCESSED_PATH}")
-    print("Missing values remaining:")
-    print(clean_df.isna().sum()[clean_df.isna().sum() > 0])
+    print(f"\nProcessed {len(clean_df)} rows -> {PROCESSED_PATH}")
+    print("Missing values remaining after cleaning:")
+    remaining = clean_df.isna().sum()
+    print(remaining[remaining > 0] if remaining.sum() else "None")
     print("\nSurvival rate:", round(clean_df["survived"].mean(), 3))
 
 

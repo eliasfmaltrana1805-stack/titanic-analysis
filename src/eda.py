@@ -66,13 +66,36 @@ def plot_survival_by_family_size(df: pd.DataFrame) -> None:
     plt.close(fig)
 
 
+def plot_survival_by_age_group(df: pd.DataFrame) -> None:
+    order = ["Child", "Teen", "Adult", "Senior"]
+    fig, ax = plt.subplots(figsize=(6, 5))
+    sns.barplot(data=df, x="age_group", y="survived", order=order, ax=ax, errorbar=None)
+    ax.set_title("Survival rate by age group")
+    ax.set_ylabel("Survival rate")
+    fig.tight_layout()
+    fig.savefig(FIGURES_DIR / "survival_by_age_group.png", dpi=150)
+    plt.close(fig)
+
+
 def print_summary(df: pd.DataFrame) -> None:
     print("Rows:", len(df))
-    print("\nOverall survival rate:", round(df["survived"].mean(), 3))
-    print("\nSurvival rate by sex:")
-    print(df.groupby("sex")["survived"].mean())
-    print("\nSurvival rate by class:")
-    print(df.groupby("pclass")["survived"].mean())
+    print("\n=== Analisis 1: Porcentaje general de supervivencia ===")
+    print(f"{round(df['survived'].mean() * 100, 1)}% de los pasajeros sobrevivio "
+          f"({df['survived'].sum()} de {len(df)}).")
+
+    print("\n=== Analisis 2: Supervivencia por sexo ===")
+    print((df.groupby("sex")["survived"].mean() * 100).round(1))
+
+    print("\n=== Analisis 3: Supervivencia por clase de pasajero ===")
+    print((df.groupby("pclass")["survived"].mean() * 100).round(1))
+
+    print("\n=== Analisis 4: Supervivencia por grupo de edad ===")
+    order = ["Child", "Teen", "Adult", "Senior"]
+    print((df.groupby("age_group", observed=True)["survived"].mean().reindex(order) * 100).round(1))
+
+    print("\n=== Analisis 5: Viajar solo vs. acompanado ===")
+    alone_rate = df.groupby("is_alone")["survived"].mean() * 100
+    print(f"Solo: {alone_rate[1]:.1f}%  |  Acompanado: {alone_rate[0]:.1f}%")
 
 
 def main() -> None:
@@ -84,8 +107,9 @@ def main() -> None:
     plot_survival_by_class(df)
     plot_age_distribution(df)
     plot_survival_by_family_size(df)
+    plot_survival_by_age_group(df)
 
-    print(f"\nSaved 4 figures to {FIGURES_DIR}")
+    print(f"\nSaved 5 figures to {FIGURES_DIR}")
 
 
 if __name__ == "__main__":
