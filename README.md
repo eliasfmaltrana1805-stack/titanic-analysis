@@ -41,7 +41,6 @@ titanic-analysis/
 ├── data/
 │   ├── raw/            # dataset original (train.csv)
 │   └── processed/      # datos limpios generados por el pipeline
-├── notebooks/          # exploración auxiliar (opcional)
 ├── src/
 │   ├── download_data.py
 │   ├── preprocess.py
