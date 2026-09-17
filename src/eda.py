@@ -67,7 +67,7 @@ def plot_survival_by_family_size(df: pd.DataFrame) -> None:
 
 
 def plot_survival_by_age_group(df: pd.DataFrame) -> None:
-    order = ["Child", "Teen", "Adult", "Senior"]
+    order = ["Nino", "Joven", "Adulto", "Adulto mayor"]
     fig, ax = plt.subplots(figsize=(6, 5))
     sns.barplot(data=df, x="age_group", y="survived", order=order, ax=ax, errorbar=None)
     ax.set_title("Survival rate by age group")
@@ -100,7 +100,7 @@ def print_summary(df: pd.DataFrame) -> None:
     print((df.groupby("pclass")["survived"].mean() * 100).round(1))
 
     print("\n=== Analisis 4: Supervivencia por grupo de edad ===")
-    order = ["Child", "Teen", "Adult", "Senior"]
+    order = ["Nino", "Joven", "Adulto", "Adulto mayor"]
     print((df.groupby("age_group", observed=True)["survived"].mean().reindex(order) * 100).round(1))
 
     print("\n=== Analisis 5: Viajar solo vs. acompanado ===")

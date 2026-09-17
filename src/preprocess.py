@@ -16,7 +16,8 @@ Reads data/raw/train.csv and writes data/processed/titanic_clean.csv with:
   - a `family_size` column (SibSp + Parch + 1)
   - an `is_alone` flag (family_size == 1)
   - a `title` column extracted from the passenger's name
-  - an `age_group` column (Child / Teen / Adult / Senior)
+  - an `age_group` column (Nino / Joven / Adulto / Adulto mayor -- ver
+    docstring de `clean()` para los cortes exactos usados)
 """
 
 import re
@@ -66,10 +67,12 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
     df["is_alone"] = (df["family_size"] == 1).astype(int)
     df["title"] = df["name"].apply(extract_title)
 
+    # Categorias de edad (criterio propio, documentado en el README):
+    # Nino <=12, Joven 13-18, Adulto 19-60, Adulto mayor >60.
     df["age_group"] = pd.cut(
         df["age"],
         bins=[0, 12, 18, 60, 100],
-        labels=["Child", "Teen", "Adult", "Senior"],
+        labels=["Nino", "Joven", "Adulto", "Adulto mayor"],
     )
 
     df["sex"] = df["sex"].astype("category")

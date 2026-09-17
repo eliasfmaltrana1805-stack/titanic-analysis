@@ -30,8 +30,9 @@ visualización.
 
 ## Requisitos
 
-- Python 3.11+ (ver nota de compatibilidad más abajo)
-- Las dependencias listadas en `requirements.txt`
+- Python 3 y Git.
+- Las dependencias listadas en `requirements.txt` (generado con
+  `pip freeze` sobre el entorno virtual del proyecto).
 
 ## Estructura del proyecto
 
@@ -69,13 +70,18 @@ titanic-analysis/
 3. Crear el entorno virtual:
 
    ```bash
-   python3 -m venv venv
+   python -m venv .venv
    ```
 
-4. Activarlo e instalar las dependencias:
+4. Activarlo:
 
    ```bash
-   source venv/bin/activate      # Windows: venv\Scripts\activate
+   source .venv/bin/activate     # Windows: .venv\Scripts\activate
+   ```
+
+5. Instalar las dependencias:
+
+   ```bash
    pip install -r requirements.txt
    ```
 
@@ -94,12 +100,6 @@ python src/eda.py
   preguntas de la sección siguiente y guarda las gráficas en
   `reports/figures/`.
 
-**Nota de compatibilidad:** `requirements.txt` no fija versiones exactas
-para evitar problemas de ruedas (wheels) no disponibles en versiones muy
-recientes de Python (ver comentario en la sección 5 del documento de
-evidencia de entrega, donde esto causó un fallo al reproducir el proyecto
-de mi compañero). Si tu `pip install` falla al compilar `pandas`, usa
-Python 3.11–3.12.
 
 ## Exploración inicial
 
@@ -138,8 +138,9 @@ No se encontraron registros duplicados en el dataset (verificado con
 - `family_size`: `SibSp + Parch + 1` (tamaño total de la familia a bordo).
 - `is_alone`: 1 si el pasajero viajaba solo (`family_size == 1`).
 - `title`: título extraído del nombre (Mr, Mrs, Miss, Master, Rare...).
-- `age_group`: categoría de edad (`Child` ≤12, `Teen` 13-18, `Adult` 19-60,
-  `Senior` >60).
+- `age_group`: categoría de edad, con criterios propios documentados en
+  `preprocess.py`: `Nino` ≤12 años, `Joven` 13-18, `Adulto` 19-60,
+  `Adulto mayor` >60.
 
 ## Análisis realizados
 
@@ -155,9 +156,9 @@ frente a solo 18.9% de los hombres.
 (mejor categoría), mayor tasa de supervivencia.
 
 **4. ¿Qué grupos de edad presentan mayor supervivencia?**
-Child: 58.0% — Teen: 42.9% — Adult: 36.6% — Senior: 22.7%. Los niños
-tuvieron la mayor tasa de supervivencia; la protección "mujeres y niños
-primero" se refleja claramente en los datos.
+Niño: 58.0% — Joven: 42.9% — Adulto: 36.6% — Adulto mayor: 22.7%. Los
+niños tuvieron la mayor tasa de supervivencia; la protección "mujeres y
+niños primero" se refleja claramente en los datos.
 
 **5. ¿Viajar solo o acompañado parece estar relacionado con la
 supervivencia?**
